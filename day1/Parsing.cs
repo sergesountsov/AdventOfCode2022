@@ -17,7 +17,7 @@ public static class Parsing
         }
     }
 
-    public static IEnumerable<IEnumerable<string>> ChunkBy(this IEnumerable<string?> seq, Func<string?, bool> endChunk)
+    public static IEnumerable<IEnumerable<string>> SplitBy(this IEnumerable<string?> seq, Func<string?, bool> endChunk)
     {
         List<string> result = new();
         foreach (var str in seq)
