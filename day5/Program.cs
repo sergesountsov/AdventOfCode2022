@@ -5,12 +5,12 @@ var input = File.ReadAllLines("input.txt");
 var layout = input.TakeWhile(line => line.StartsWith("[")).Reverse();
 var stackCount = Convert.ToInt32(input.First(line => line.StartsWith(" 1")).Split(" ", StringSplitOptions.RemoveEmptyEntries).Last());
 
-var stacks = ParseLayout(layout, stackCount);
 
 //DisplayStacks(stacks);
 
 var program = input.SkipWhile(line => !line.StartsWith("move"));
-
+// Part 1
+var stacks = ParseLayout(layout, stackCount);
 var reg = new Regex(@"move (\d+) from (\d+) to (\d+)");
 foreach (string command in program )
 {
@@ -26,6 +26,27 @@ foreach (string command in program )
     }
 }
 
+Console.Write("Part 1: ");
+foreach (var stack in stacks)
+{
+    Console.Write(stack.Last());
+}
+
+Console.WriteLine();
+// Part 2
+stacks = ParseLayout(layout, stackCount);
+foreach (string command in program)
+{
+    var match = reg.Match(command);
+    int count = Convert.ToInt32(match.Groups[1].Value);
+    int from = Convert.ToInt32(match.Groups[2].Value) - 1;
+    int to = Convert.ToInt32(match.Groups[3].Value) - 1;
+
+    stacks[to].AddRange(stacks[from].GetRange(stacks[from].Count - count, count));
+    stacks[from].RemoveRange(stacks[from].Count - count, count);
+}
+
+Console.Write("Part 2: ");
 foreach (var stack in stacks)
 {
     Console.Write(stack.Last());
