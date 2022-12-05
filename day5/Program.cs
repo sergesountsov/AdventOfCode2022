@@ -5,7 +5,7 @@ var input = File.ReadAllLines("input.txt");
 var layout = input.TakeWhile(line => line.StartsWith("[")).Reverse();
 var stackCount = Convert.ToInt32(input.First(line => line.StartsWith(" 1")).Split(" ", StringSplitOptions.RemoveEmptyEntries).Last());
 
-List<Stack<char>> stacks = ParseLayout(layout, stackCount);
+var stacks = ParseLayout(layout, stackCount);
 
 //DisplayStacks(stacks);
 
@@ -21,23 +21,24 @@ foreach (string command in program )
 
     for (int i =0; i < count; i++)
     {
-        stacks[to].Push(stacks[from].Pop());
+        stacks[to].Add(stacks[from][stacks[from].Count-1]);
+        stacks[from].RemoveAt(stacks[from].Count - 1);
     }
 }
 
 foreach (var stack in stacks)
 {
-    Console.Write(stack.Peek());
+    Console.Write(stack.Last());
 }
 
 Console.WriteLine();
 
-static List<Stack<char>> ParseLayout(IEnumerable<string> layout, int stackCount)
+static List<List<char>> ParseLayout(IEnumerable<string> layout, int stackCount)
 {
-    List<Stack<char>> stacks = new(stackCount);
+    List<List<char>> stacks = new(stackCount);
     for (int i = 0; i < stackCount; i++)
     {
-        stacks.Add(new Stack<char>());
+        stacks.Add(new List<char>());
     }
 
     foreach (var line in layout)
@@ -47,7 +48,7 @@ static List<Stack<char>> ParseLayout(IEnumerable<string> layout, int stackCount)
             int pos = stackIdx * 4 + 1;
             if (line[pos] != ' ')
             {
-                stacks[stackIdx].Push(line[pos]);
+                stacks[stackIdx].Add(line[pos]);
             }
         }
     }
